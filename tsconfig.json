@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "lib": ["es2017"],
+        "rootDir": "src",
+        "outDir": "lib",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "strict": true,
+        "noEmitOnError": true,
+        "experimentalDecorators": true,
+        "declaration": true,
+        "types": []
+    }
+}
