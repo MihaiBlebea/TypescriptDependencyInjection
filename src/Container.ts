@@ -1,15 +1,24 @@
 
-type Registered = { alias : String, constructor : Function, dependencies : String[] }[]
+type Registered = { alias : string, constructor : Function, dependencies : Dependency[] }[]
+type Dependency = { type: string, value: string | number | Boolean | Function }
 
 
-export class Container
+export default class Container
 {
-    private registered : Registered
+    private _registered : Registered
 
     constructor()
     {
-        this.registered = []
+        this._registered = []
     }
+
+    get registered()
+    {
+        return this._registered
+    }
+
+
+    // Register dependency
 
     register(required : Function)
     {
@@ -22,19 +31,83 @@ export class Container
         return this
     }
 
-    as(alias : String)
+    as(alias : string)
     {
         let last = this.getLastEntry()
         last.alias = alias
         return this
     }
 
-    dependsOn(alias : String)
+    dependsOn(value : string | number | boolean | Function)
     {
         let last = this.getLastEntry()
-        last.dependencies.push(alias)
+
+        console.log(typeof value)
+
+        if(typeof value === 'number')
+        {
+            last.dependencies.push({ type: 'number', value: value })
+        }
+
+        if(typeof value === 'boolean')
+        {
+            last.dependencies.push({ type: 'boolean', value: value })
+        }
+
+        if(typeof value === 'string')
+        {
+            try {
+                this.findAlias(value)
+                last.dependencies.push({ type: 'class', value: value })
+            } catch(error) {
+                last.dependencies.push({ type: 'string', value: value })
+            }
+        }
+
+        if(typeof value === 'function')
+        {
+            let alias = this.getAliasFromConstructor(value)
+            if(!alias)
+            {
+                last.dependencies.push({ type: 'callback', value: value })
+            } else {
+                last.dependencies.push({ type: 'class', value: alias })
+            }
+        }
+
         return this
     }
+
+    dependsOnClass(value : string)
+    {
+        let last = this.getLastEntry()
+        last.dependencies.push({ type: 'class', value: value })
+        return this
+    }
+
+    dependsOnString(value : string)
+    {
+        let last = this.getLastEntry()
+        last.dependencies.push({ type: 'string', value: value })
+        return this
+    }
+
+    dependsOnNumber(value : number)
+    {
+        let last = this.getLastEntry()
+        last.dependencies.push({ type: 'number', value: value })
+        return this
+    }
+
+    dependsOnBoolean(value : boolean)
+    {
+        let last = this.getLastEntry()
+        last.dependencies.push({ type: 'boolean', value: value })
+        return this
+    }
+
+
+    // Resolving dependencies
 
     get(alias : String)
     {
@@ -46,26 +119,28 @@ export class Container
 
     private getAliasFromConstructor(object : Function)
     {
-        return object.constructor.name
+        return object.name
     }
 
     private getLastEntry()
     {
-        if(this.registered.length === 0)
+        if(this._registered.length === 0)
         {
             throw new Error('The container is empty. Add a dependency first before creating alias')
         }
-        return this.registered[this.registered.length - 1]
+        return this._registered[this._registered.length - 1]
     }
 
     private findAlias(alias : String)
     {
-        let found = this.registered.filter((item)=> {
+        let found = this._registered.filter((item)=> {
             if(item.alias.toLowerCase() === alias.toLowerCase())
             {
                 return item
             }
         })[0]
+
+        console.log('Item found:', found)
 
         if(!found)
         {
@@ -76,19 +151,30 @@ export class Container
 
     private aliases()
     {
-        return this.registered.map((item)=> {
+        return this._registered.map((item)=> {
             return item.alias.toLowerCase()
         })
     }
 
-    private resolveDependencies(dependencies : Object[]) : Object[]
+    private resolveDependencies(dependencies : Dependency[]) : string[]
     {
         return dependencies.map((dependency)=> {
-            if(typeof dependency === 'string' && this.aliases().includes(dependency.toLowerCase()))
+            if(['string', 'number', 'boolean'].includes(dependency.type))
             {
-                return this.get(dependency)
+                return dependency.value
             }
-            return dependency
+
+            if(dependency.type === 'class')
+            {
+                return this.get(<string>dependency.value)
+            }
+
+            if(typeof dependency.value === 'function')
+            {
+                return dependency.value()
+            }
+
+            throw Error('Dependency type not found')
         })
     }
 }
