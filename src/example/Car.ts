@@ -1,4 +1,7 @@
-export default class Car
+import ICar from './ICar'
+
+
+export default class Car implements ICar
 {
     brand : string
 

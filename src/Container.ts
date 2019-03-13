@@ -42,8 +42,6 @@ export default class Container
     {
         let last = this.getLastEntry()
 
-        console.log(typeof value)
-
         if(typeof value === 'number')
         {
             last.dependencies.push({ type: 'number', value: value })
@@ -139,8 +137,6 @@ export default class Container
                 return item
             }
         })[0]
-
-        console.log('Item found:', found)
 
         if(!found)
         {

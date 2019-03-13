@@ -1,4 +1,6 @@
 import Car from './Car'
+import ICar from './ICar'
+
 
 export default class User
 {
@@ -6,9 +8,9 @@ export default class User
 
     age : number
 
-    car : Car
+    car : ICar
 
-    constructor(name : string, age : number, car : Car)
+    constructor(name : string, age : number, car : ICar)
     {
         this.name = name
         this.age  = age

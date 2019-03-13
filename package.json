@@ -5,7 +5,8 @@
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "test": "node ./lib/example/index.js"
+        "example": "node ./lib/example/index.js",
+        "test": "mocha ./lib/tests/*.js"
     },
     "author": {
         "name": "Mihai Blebea",
@@ -21,5 +22,11 @@
             "type": "Apache-2.0",
             "url": "https://opensource.org/licenses/apache2.0.php"
         }
-    ]
+    ],
+    "devDependencies": {
+        "@types/chai": "^4.1.7",
+        "@types/mocha": "^5.2.5",
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0"
+    }
 }
