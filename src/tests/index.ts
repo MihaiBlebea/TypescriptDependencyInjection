@@ -10,7 +10,7 @@ import Car from './../example/Car'
 describe('Testing the dependency container', ()=> {
     describe('Registered a class named "Car" in the container', ()=> {
         it('Should find a class named "Car" if you check all stored dependencies', ()=> {
-            let container = new Container()
+            let container = Container.instance
 
             container.register(Car)
                      .dependsOnString('Mercedes')
@@ -21,7 +21,7 @@ describe('Testing the dependency container', ()=> {
         })
 
         it('Should return the registered class "Car" from the container if using the "get()" method', ()=> {
-            let container = new Container()
+            let container = Container.instance
 
             container.register(Car)
                      .dependsOnString('Mercedes')
@@ -33,7 +33,7 @@ describe('Testing the dependency container', ()=> {
         })
 
         it('Should return the registered class "Car" from the container even if registered without specifing it\'s dependencies type', ()=> {
-            let container = new Container()
+            let container = Container.instance
 
             container.register(Car)
                      .dependsOn('Mercedes')
@@ -45,7 +45,7 @@ describe('Testing the dependency container', ()=> {
         })
 
         it('Should throw an Error if you ask for an unregistered class. It should specify the name of the dependency that it failed to find', ()=> {
-            let container = new Container()
+            let container = Container.instance
 
             container.register(Car)
                      .dependsOn('Mercedes')
@@ -62,7 +62,7 @@ describe('Testing the dependency container', ()=> {
 
     describe('Registered two classes "Car" and "User" that depend one on the other in the container', ()=> {
         it('Should return class User that depends on Car and resolve the dependency in the background', ()=> {
-            let container = new Container()
+            let container = Container.instance
 
             container.register(Car)
                      .dependsOn('Mercedes')
