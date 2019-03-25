@@ -4,7 +4,9 @@ declare type Dependency = {
 };
 export default class Container {
     private _registered;
-    constructor();
+    private static _instance;
+    private constructor();
+    static readonly instance: Container;
     readonly registered: {
         alias: string;
         constructor: Function;

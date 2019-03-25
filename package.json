@@ -1,6 +1,6 @@
 {
     "name": "typescript-dependency-injection",
-    "version": "1.0.2",
+    "version": "1.0.5",
     "description": "Dependency Injection container for Typescript projects",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
@@ -28,5 +28,8 @@
         "@types/mocha": "^5.2.5",
         "chai": "^4.2.0",
         "mocha": "^5.2.0"
+    },
+    "dependencies": {
+        "@types/node": "^11.11.6"
     }
 }

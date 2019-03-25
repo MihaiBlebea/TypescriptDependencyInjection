@@ -7,10 +7,20 @@ export default class Container
 {
     private _registered : Registered
 
-    constructor()
+    private static _instance : Container
+
+    private constructor()
     {
         this._registered = []
     }
+
+    public static get instance()
+    {
+        // Do you need arguments? Make it a regular static method instead.
+        return this._instance || (this._instance = new this())
+    }
+
+
 
     get registered()
     {
