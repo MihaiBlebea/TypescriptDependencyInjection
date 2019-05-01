@@ -1,25 +1,37 @@
 
-type Registered = { alias : string, constructor : Function, dependencies : Dependency[] }[]
-type Dependency = { type: string, value: string | number | Boolean | Function }
+type Registered = {
+    alias : string,
+    constructor : Function,
+    dependencies : Dependency[]
+}[]
+
+
+type Dependency = {
+    type: string,
+    value: string | number | Boolean | Function
+}
 
 
 export default class Container
 {
     private _registered : Registered
 
-    private static _instance : Container
 
-    private constructor()
+    constructor()
     {
         this._registered = []
     }
 
-    public static get instance()
+    merge(container : Container)
     {
-        // Do you need arguments? Make it a regular static method instead.
-        return this._instance || (this._instance = new this())
+        container.aliases().map((alias)=> {
+            if(this.aliases().includes(alias))
+            {
+                throw Error(`Merger aborted. Alias ${ alias } already exists in the base container`)
+            }
+        })
+        this._registered = this._registered.concat(container.registered)
     }
-
 
 
     get registered()
@@ -29,7 +41,6 @@ export default class Container
 
 
     // Register dependency
-
     register(required : Function)
     {
         this.registered.push({
@@ -43,9 +54,46 @@ export default class Container
 
     as(alias : string)
     {
+        // 1. Check that you are not setting the same alias as the existing one
         let last = this.getLastEntry()
+        if(last.alias === alias)
+        {
+            throw Error(`You are setting the same alias as the existing one: ${ alias }`)
+        }
+
+        // 2. Make sure that the key is not a duplicate
+        if(this.aliasExists(alias))
+        {
+            throw Error(`Alias ${ alias } is already registered in the container`)
+        }
+
+        // 3. Set new alias
         last.alias = alias
         return this
+    }
+
+    private aliasExists(alias : string) : boolean
+    {
+        let found = this.aliases().filter((savedAlias)=> {
+            return savedAlias === alias.toUpperCase()
+        })
+        return found.length > 0 ? true : false
+    }
+
+    resolve(alias : string, callback : Function)
+    {
+        // 1. Make sure that the key is not a duplicate
+        if(this.aliasExists(alias))
+        {
+            throw Error(`Alias ${ alias } is already registered in the container`)
+        }
+
+        // 2. Register the new resolver
+        this.registered.push({
+            alias: alias,
+            constructor: callback,
+            dependencies: []
+        })
     }
 
     dependsOn(value : string | number | boolean | Function)
@@ -114,14 +162,22 @@ export default class Container
         return this
     }
 
-
     // Resolving dependencies
-
     get(alias : String)
     {
+        // 1. Find by alias
         let found = this.findAlias(alias)
+
+        // 2. If it's a callback just resolve it
+        if(!found.constructor.name)
+        {
+            return found.constructor()
+        }
+
+        // 3. Resolve dependencies
         let dependencies = this.resolveDependencies(found.dependencies)
 
+        // 4. Initialize object and pass in the dependencies
         return Reflect.construct(found.constructor, dependencies)
     }
 
@@ -155,10 +211,10 @@ export default class Container
         return found
     }
 
-    private aliases()
+    aliases()
     {
         return this._registered.map((item)=> {
-            return item.alias.toLowerCase()
+            return item.alias.toUpperCase()
         })
     }
 

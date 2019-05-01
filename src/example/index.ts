@@ -3,13 +3,14 @@ import Car from './Car'
 import User from './User'
 import Salary from './Salary'
 import Bike from './Bike'
+import Register from './../Register'
 
-require('./cars-container')
+import { container as carContainer } from './cars-container'
 
-let container = Container.instance
+
+let container = new Container
 
 // container.register(Car)
-//          .as('Car')
 //          .dependsOnString('Mercedes')
 //          .dependsOnNumber(2500)
 //
@@ -20,14 +21,21 @@ let container = Container.instance
 //          .dependsOnNumber(2500)
 
 container.register(User)
-         .as('User')
          .dependsOnString('Mihai')
          .dependsOnNumber(23)
          .dependsOn(Car)
 
 container.register(Salary)
          .dependsOnNumber(70000)
-         .dependsOn(()=> new User('Mihai', 29, new Car('Renault', 1500)))
+         .dependsOnClass('MihaiSerban')
 
-let secondContainer = Container.instance
-console.log(secondContainer.get('User'))
+
+container.resolve('MihaiSerban', ()=> new User('Serban22', 33, 102) )
+
+container.merge(carContainer)
+
+let register = new Register(User)
+
+
+console.log(register)
+// console.log(container.get('Salary'))
