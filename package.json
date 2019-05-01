@@ -1,7 +1,7 @@
 {
     "name": "typescript-dependency-injection",
-    "version": "2.0.1",
-    "description": "Dependency Injection container for Typescript projects",
+    "version": "2.0.2",
+    "description": "Super lightweight Dependency Injection container for Javascript / Node / Typescript projects. Super fast to implement, extra flexible and easy to work with",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
@@ -13,16 +13,7 @@
         "email": "mihaiserban.blebea@gmail.com",
         "url": "https://www.linkedin.com/in/mihai-blebea-87353310b/"
     },
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "https://www.opensource.org/licenses/mit-license.php"
-        },
-        {
-            "type": "Apache-2.0",
-            "url": "https://opensource.org/licenses/apache2.0.php"
-        }
-    ],
+    "license": "MIT",
     "devDependencies": {
         "@types/chai": "^4.1.7",
         "@types/mocha": "^5.2.5",
@@ -31,5 +22,6 @@
     },
     "dependencies": {
         "@types/node": "^11.11.6"
-    }
+    },
+    "keywords": ["dependency injection", "dependency container", "dependency", "typescript", "node", "typescript dependency injection", "inversion of control", "javascript dependency container", "typescript dependency injection" ]
 }
