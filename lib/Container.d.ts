@@ -1,16 +1,9 @@
-declare type Dependency = {
-    type: string;
-    value: string | number | Boolean | Function;
-};
+import Register from './Register';
 export default class Container {
     private _registered;
     constructor();
-    merge(container: Container): void;
-    readonly registered: {
-        alias: string;
-        constructor: Function;
-        dependencies: Dependency[];
-    }[];
+    merge(container: Container): this;
+    readonly registered: Register[];
     register(required: Function): this;
     as(alias: string): this;
     private aliasExists;
@@ -20,11 +13,9 @@ export default class Container {
     dependsOnString(value: string): this;
     dependsOnNumber(value: number): this;
     dependsOnBoolean(value: boolean): this;
-    get(alias: String): any;
-    private getAliasFromConstructor;
+    get(alias: string): any;
     private getLastEntry;
     private findAlias;
     aliases(): string[];
     private resolveDependencies;
 }
-export {};

@@ -23,7 +23,7 @@ let container = new Container
 container.register(User)
          .dependsOnString('Mihai')
          .dependsOnNumber(23)
-         .dependsOn(Car)
+         .dependsOn(()=> new Car('Dacia', 24555))
 
 container.register(Salary)
          .dependsOnNumber(70000)
@@ -37,5 +37,5 @@ container.merge(carContainer)
 let register = new Register(User)
 
 
-console.log(register)
-// console.log(container.get('Salary'))
+console.log(container)
+console.log(container.get('User'))

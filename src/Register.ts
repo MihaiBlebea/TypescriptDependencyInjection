@@ -1,7 +1,4 @@
-type Dependency = {
-    type: string,
-    value: string | number | Boolean | Function
-}
+import Dependency from './Dependency'
 
 
 export default class Register
@@ -15,13 +12,23 @@ export default class Register
 
     constructor(constructor : Function, alias? : string)
     {
-        this._alias       = alias || this.getAliasFromConstructor(constructor)
+        this._alias       = alias || Register.getAliasFromConstructor(constructor)
         this._constructor = constructor
+    }
+
+    get dependencies()
+    {
+        return this._dependencies
     }
 
     set dependencies(value : Dependency[])
     {
         this._dependencies = value
+    }
+
+    pushDependency(dependency : Dependency)
+    {
+        this._dependencies.push(dependency)
     }
 
     set alias(value : string)
@@ -31,10 +38,25 @@ export default class Register
 
     get alias() : string
     {
-        return this._alias
+        return this._alias.toUpperCase()
     }
 
-    private getAliasFromConstructor(object : Function) : string
+    sameAlias(alias : string)
+    {
+        return this.alias === alias.toUpperCase()
+    }
+
+    getConstructor()
+    {
+        return this._constructor
+    }
+
+    getConstructorName()
+    {
+        return this._constructor.name
+    }
+
+    static getAliasFromConstructor(object : Function) : string
     {
         return object.name
     }
