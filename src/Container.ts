@@ -1,16 +1,10 @@
-
-// type Registered = {
-//     alias : string,
-//     constructor : Function,
-//     dependencies : Dependency[]
-// }[]
-
 import Register from './Register'
 import Dependency from './Dependency'
 
 
 export default class Container
 {
+    //!REGISTER
     private _registered : Register[]
 
 
@@ -41,6 +35,7 @@ export default class Container
     // Register dependency
     register(required : Function)
     {
+        //!REGISTER
         let register = new Register(required)
         this.registered.push(register)
 
@@ -83,6 +78,7 @@ export default class Container
             throw Error(`Alias ${ alias } is already registered in the container`)
         }
 
+        //!REGISTER
         // 2. Register the new resolver
         let register = new Register(callback, alias)
         this.registered.push(register)
@@ -101,19 +97,35 @@ export default class Container
         {
             last.pushDependency(new Dependency('boolean', value))
         }
-
+        
         if(typeof value === 'string')
-        {
-            try {
-                this.findAlias(value)
-                last.pushDependency(new Dependency('class', value))
-            } catch(error) {
+        {         
+            if(value[0] === '@')
+            {
+                last.pushDependency(new Dependency('class', value.slice(1)))
+                return
+            }
+
+            if(value[0] === '~')
+            {
+                last.pushDependency(new Dependency('string', value.slice(1)))
+                return
+            }
+            
+            let found = this.findAlias(value)
+            if(!found)
+            {
                 last.pushDependency(new Dependency('string', value))
+                return
+            } else {
+                last.pushDependency(new Dependency('class', value))
+                return
             }
         }
 
         if(typeof value === 'function')
         {
+            //!REGISTER
             let alias = Register.getAliasFromConstructor(value)
             if(!alias)
             {
@@ -122,8 +134,29 @@ export default class Container
                 last.pushDependency(new Dependency('class', value))
             }
         }
-
         return this
+    }
+
+    dependencies(...dependencies : any)
+    {
+        if(Array.isArray(dependencies[0]))
+        {
+            dependencies[0].map((dependency : string | number | boolean | Function)=> {
+                console.log(dependency)
+                this.dependsOn(dependency)
+            })
+        } else {
+            dependencies.map((dependency : string | number | boolean | Function)=> {
+                this.dependsOn(dependency)
+            })
+        }
+    }
+
+    test()
+    {
+        this.registered.map((item)=> {
+            this.get(item.alias)
+        })
     }
 
     dependsOnClass(value : string)
@@ -159,6 +192,10 @@ export default class Container
     {
         // 1. Find by alias
         let found = this.findAlias(alias)
+        if(!found)
+        {
+            throw new Error(`Could not find ${ alias } dependency in the container`)
+        }
 
         // 2. If it's a callback just resolve it
         if(!found.getConstructorName())
@@ -183,19 +220,15 @@ export default class Container
         return this._registered[this._registered.length - 1]
     }
 
-    private findAlias(alias : string)
+    private findAlias(alias : string) : Register | null
     {
-        let found = this._registered.filter((register)=> {
+        let found = null
+        this._registered.forEach((register)=> {
             if(register.sameAlias(alias))
             {
-                return register
+                found = register
             }
-        })[0]
-
-        if(!found)
-        {
-            throw new Error(`Could not find ${ alias } dependency in the container`)
-        }
+        })
         return found
     }
 

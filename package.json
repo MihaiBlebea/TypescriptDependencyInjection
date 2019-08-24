@@ -1,11 +1,11 @@
 {
     "name": "typescript-dependency-injection",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "description": "Super lightweight Dependency Injection container for Javascript / Node / Typescript projects. Super fast to implement, extra flexible and easy to work with",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "scripts": {
-        "example": "node ./lib/example/index.js",
+        "example": "node ./lib/example.js",
         "test": "mocha ./lib/tests/*.js"
     },
     "author": {
@@ -23,5 +23,15 @@
     "dependencies": {
         "@types/node": "^11.11.6"
     },
-    "keywords": ["dependency injection", "dependency container", "dependency", "typescript", "node", "typescript dependency injection", "inversion of control", "javascript dependency container", "typescript dependency injection" ]
+    "keywords": [
+        "dependency injection",
+        "dependency container",
+        "dependency",
+        "typescript",
+        "node",
+        "typescript dependency injection",
+        "inversion of control",
+        "javascript dependency container",
+        "typescript dependency injection"
+    ]
 }
