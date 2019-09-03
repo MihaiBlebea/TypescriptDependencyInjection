@@ -8,7 +8,7 @@ export default class Container {
     as(alias: string): this;
     private aliasExists;
     resolve(alias: string, callback: Function): void;
-    dependsOn(value: string | number | boolean | Function): this | undefined;
+    dependsOn(value: string | number | boolean | Function | string[] | number[]): this | undefined;
     dependencies(...dependencies: any): void;
     test(): void;
     dependsOnClass(value: string): this;

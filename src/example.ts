@@ -30,33 +30,20 @@ class Age
 
 class Human
 {
-    constructor(private _name : Name, private _age : Age)
+    constructor(private _names : string[])
     {
         //
-    }
-
-    get name()
-    {
-        return this._name.value
-    }
-
-    get age()
-    {
-        return this._age.value
     }
 }
 
 // let mihai = new Human('Mihai', 29)
 // container.register(Human).dependsOnClass('Name').dependsOnClass('Age')
 
-container.register(Name).dependencies('Serban')
+container.register(Human).dependsOn(['Serban', 'Iulia', 'Nathi'])
 
-container.register(Age).dependencies(30)
-
-container.register(Human).dependencies('@Name', 31)
 
 let mihai = container.get('Human')
 
-console.log(mihai)
+// console.log(mihai)
 
 container.test()

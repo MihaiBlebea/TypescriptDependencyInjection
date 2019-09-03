@@ -2,7 +2,7 @@ export default class Dependency
 {
     private _type : string
 
-    private _value : string | number | boolean | Function
+    private _value : string | number | boolean | Function | string[] | number[]
 
     private _validTypes = [
         'string',
@@ -12,7 +12,7 @@ export default class Dependency
         'class'
     ]
 
-    constructor(type : string, value : string | number | boolean | Function)
+    constructor(type : string, value : string | number | boolean | Function | string[] | number[])
     {
         this.assertValidType(type)
 

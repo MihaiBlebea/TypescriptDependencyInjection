@@ -84,7 +84,7 @@ export default class Container
         this.registered.push(register)
     }
 
-    dependsOn(value : string | number | boolean | Function)
+    dependsOn(value : string | number | boolean | Function | string[] | number[])
     {
         let last = this.getLastEntry()
 
@@ -121,6 +121,11 @@ export default class Container
                 last.pushDependency(new Dependency('class', value))
                 return
             }
+        }
+
+        if(Array.isArray(value))
+        {         
+            last.pushDependency(new Dependency('string', value))
         }
 
         if(typeof value === 'function')

@@ -1,6 +1,6 @@
 {
     "name": "typescript-dependency-injection",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "description": "Super lightweight Dependency Injection container for Javascript / Node / Typescript projects. Super fast to implement, extra flexible and easy to work with",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
